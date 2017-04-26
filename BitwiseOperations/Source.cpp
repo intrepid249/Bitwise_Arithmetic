@@ -24,13 +24,14 @@ int bitwiseAdd(int a, int b) {
 }
 
 int bitwiseSubtract(int a, int b) {
+	// Add the negative number to subtract
 	return bitwiseAdd(a, negate(b));
 }
 
 int bitwiseMultiply(int a, int b) {
 	int ans = 0;
 
-	if (a < 0 || b < 0)
+	if (a < 0 || b < 0) // negate numbers if either are negative
 		a = negate(a), b = negate(b);
 
 	while (b > 0) {
@@ -39,8 +40,8 @@ int bitwiseMultiply(int a, int b) {
 			// since anything x 0 is 0
 			ans = bitwiseAdd(ans, a);
 
-		a <<= 1;
-		b >>= 1;
+		a <<= 1; // Left shift to move carry bit
+		b >>= 1; // Right shift to use next units column
 	}
 	return ans;
 }
@@ -48,16 +49,18 @@ int bitwiseMultiply(int a, int b) {
 int bitwiseDivide(int a, int b, int *remainder) {
 	int ans = 0, sign = 0;
 
+	// Get the two's complement and set the sign flag
 	if (a < 0) a = negate(a), sign ^= 1;
 	if (b < 0) b = negate(b), sign ^= 1;
 
 	if (b != 0) {
 		while (a >= b)
+			// As many times as we can subtract integrally, we perform a division
 			a = bitwiseSubtract(a, b), ++ans;
-		*remainder = a;
+		*remainder = a; // the remainder is anything we couldn't subtract
 	}
 
-
+	// Get the negative answer if the sign flag is set
 	if (sign) ans = negate(ans);
 
 	return ans;
